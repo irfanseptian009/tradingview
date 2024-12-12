@@ -2,62 +2,51 @@ import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { createChart } from "lightweight-charts";
 
-const ChartWithOverlayPriceScale = ({
+const ChartWithOverlay = ({
   dataSets,
   title = "Chart with Overlay Price Scales",
 }) => {
   const chartRef = useRef(null);
-  const seriesRefs = useRef({});
+  const seriesRefs = useRef({}); // To store references to all series
   const [focusedKey, setFocusedKey] = useState(null); // Key of the focused series
 
   useEffect(() => {
     const chart = createChart(chartRef.current, {
       width: 700,
       height: 300,
-      layout: {
-        backgroundColor: "#FFFFFF",
-        textColor: "#000000",
-      },
-      grid: {
-        vertLines: { color: "#e1e1e1" },
-        horzLines: { color: "#e1e1e1" },
-      },
-      timeScale: { timeVisible: true, secondsVisible: false },
+            timeScale: { timeVisible: true, secondsVisible: true },
       crosshair: {
-        mode: 1, // Crosshair displays values of all series
+        mode: 1, 
       },
     });
 
-    // Add datasets as line series
+    // Add datasets as line series with overlay price scales
     Object.keys(dataSets).forEach((key, index) => {
+      const priceScaleId = `overlay-${index}`; 
+
       const series = chart.addLineSeries({
-        color: dataSets[key].color || `hsl(${index * 60}, 70%, 50%)`,
+        color: dataSets[key].color || `hsl(${index * 60}, 100%, 50%)`,
         lineWidth: 2,
+        priceScaleId, 
       });
 
       series.setData(
         dataSets[key].data.map((item) => ({
-          time: item.time.split("T")[0],
+          time: item.time.split("T")[0], 
           value: item.value,
         }))
       );
 
+      // Configure the overlay price scale for this series
+      chart.priceScale(priceScaleId).applyOptions({
+        position: "overlay", 
+        autoScale: true,
+        borderColor: "#e1e1e1",
+        scaleMargins: { top: 0.40, bottom: 0.40 },
+        
+      });
+
       seriesRefs.current[key] = series;
-    });
-
-    // Listen for crosshair move event
-    chart.subscribeCrosshairMove((param) => {
-      if (!param || !param.time || param.seriesPrices.size === 0) {
-        setFocusedKey(null); // Reset focus if outside data range
-        return;
-      }
-
-      // Determine which series is closest to the crosshair
-      const closestSeriesKey = Object.keys(seriesRefs.current).find((key) =>
-        param.seriesPrices.has(seriesRefs.current[key])
-      );
-
-      setFocusedKey(closestSeriesKey || null);
     });
 
     return () => {
@@ -66,11 +55,11 @@ const ChartWithOverlayPriceScale = ({
   }, [dataSets]);
 
   useEffect(() => {
-    // Update series visibility based on focus
+    // Update series visibility and styling based on focus
     Object.keys(seriesRefs.current).forEach((key) => {
       seriesRefs.current[key].applyOptions({
-        visible: !focusedKey || focusedKey === key, // Show only focused series, or all if none is focused
-        lineWidth: focusedKey === key ? 3 : 2, // Highlight focused series with thicker line
+        visible: !focusedKey || focusedKey === key,
+        lineWidth: focusedKey === key ? 4 : 2, 
       });
     });
   }, [focusedKey]);
@@ -80,6 +69,7 @@ const ChartWithOverlayPriceScale = ({
       style={{
         padding: "20px",
         backgroundColor: "#f9f9f9",
+        boxShadow: "0px 4px 8px 0px rgba(0,0,0,03.2)",
         borderRadius: "8px",
       }}
     >
@@ -121,9 +111,9 @@ const ChartWithOverlayPriceScale = ({
   );
 };
 
-ChartWithOverlayPriceScale.propTypes = {
-  dataSets: PropTypes.object.isRequired,
+ChartWithOverlay.propTypes = {
+  dataSets: PropTypes.object.isRequired, // Object containing datasets for multiple series
   title: PropTypes.string,
 };
 
-export default ChartWithOverlayPriceScale;
+export default ChartWithOverlay;

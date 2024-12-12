@@ -24,11 +24,16 @@ a:hover {
 
 body {
   margin: 0;
+  padding: 0;
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  justify-content: center;
+  align-items: center;  
+  min-width: 320px;     
+  min-height: 100vh;    
+  background-color: #f9e2e2; 
+  box-sizing: border-box; 
 }
+
 
 h1 {
   font-size: 3.2em;

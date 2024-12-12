@@ -1,123 +1,71 @@
-import ChartWithFilter from "./components/ChartWithFilter";
-
-const dataSets = {
-  plot1: {
-    label: "Plot 1",
-    color: "#FF5733",
-    data: [
-      { "time": "2024-12-01T12:00:00Z", "value": 0.55 },
-      { "time": "2024-12-02T12:00:00Z", "value": 0.57 },
-      { "time": "2024-12-03T12:00:00Z", "value": 0.59 },
-      { "time": "2024-12-04T12:00:00Z", "value": 0.63 },
-      { "time": "2024-12-05T12:00:00Z", "value": 0.58 },
-      { "time": "2024-12-06T12:00:00Z", "value": 0.62 },
-      { "time": "2024-12-07T12:00:00Z", "value": 0.67 },
-      { "time": "2024-12-08T12:00:00Z", "value": 0.70 },
-      { "time": "2024-12-09T12:00:00Z", "value": 0.74 },
-      { "time": "2024-12-10T12:00:00Z", "value": 0.68 },
-      { "time": "2024-12-11T12:00:00Z", "value": 0.71 },
-      { "time": "2024-12-12T12:00:00Z", "value": 0.65 },
-      { "time": "2024-12-13T12:00:00Z", "value": 0.68 },
-      { "time": "2024-12-14T12:00:00Z", "value": 0.72 },
-      { "time": "2024-12-15T12:00:00Z", "value": 0.76 },
-      { "time": "2024-12-16T12:00:00Z", "value": 0.80 },
-      { "time": "2024-12-17T12:00:00Z", "value": 0.77 },
-      { "time": "2024-12-18T12:00:00Z", "value": 0.82 },
-      { "time": "2024-12-19T12:00:00Z", "value": 0.75 },
-      { "time": "2024-12-20T12:00:00Z", "value": 0.78 },
-      { "time": "2024-12-21T12:00:00Z", "value": 0.72 },
-      { "time": "2024-12-22T12:00:00Z", "value": 0.69 },
-      { "time": "2024-12-23T12:00:00Z", "value": 0.74 },
-      { "time": "2024-12-24T12:00:00Z", "value": 0.77 },
-      { "time": "2024-12-25T12:00:00Z", "value": 0.79 },
-      { "time": "2024-12-26T12:00:00Z", "value": 0.83 },
-      { "time": "2024-12-27T12:00:00Z", "value": 0.85 },
-      { "time": "2024-12-28T12:00:00Z", "value": 0.81 },
-      { "time": "2024-12-29T12:00:00Z", "value": 0.75 },
-      { "time": "2024-12-30T12:00:00Z", "value": 0.78 },
-      { "time": "2024-12-31T12:00:00Z", "value": 0.72 },
-      { "time": "2025-01-01T12:00:00Z", "value": 0.69 },
-      { "time": "2025-01-02T12:00:00Z", "value": 0.73 },
-      { "time": "2025-01-03T12:00:00Z", "value": 0.76 },
-      { "time": "2025-01-04T12:00:00Z", "value": 0.79 },
-      { "time": "2025-01-05T12:00:00Z", "value": 0.84 },
-      { "time": "2025-01-06T12:00:00Z", "value": 0.87 },
-      { "time": "2025-01-07T12:00:00Z", "value": 0.83 },
-      { "time": "2025-01-08T12:00:00Z", "value": 0.85 },
-      { "time": "2025-01-09T12:00:00Z", "value": 0.88 },
-      { "time": "2025-01-10T12:00:00Z", "value": 0.86 },
-      { "time": "2025-01-11T12:00:00Z", "value": 0.82 },
-      { "time": "2025-01-12T12:00:00Z", "value": 0.75 },
-      { "time": "2025-01-13T12:00:00Z", "value": 0.72 },
-      { "time": "2025-01-14T12:00:00Z", "value": 0.74 },
-      { "time": "2025-01-15T12:00:00Z", "value": 0.78 },
-      { "time": "2025-01-16T12:00:00Z", "value": 0.73 },
-      { "time": "2025-01-17T12:00:00Z", "value": 0.68 },
-      { "time": "2025-01-18T12:00:00Z", "value": 0.64 },
-      { "time": "2025-01-19T12:00:00Z", "value": 0.69 },
-      { "time": "2025-01-20T12:00:00Z", "value": 0.71 },
-      { "time": "2025-01-21T12:00:00Z", "value": 0.74 },
-      { "time": "2025-01-22T12:00:00Z", "value": 0.78 },
-      { "time": "2025-01-23T12:00:00Z", "value": 0.82 },
-      { "time": "2025-01-24T12:00:00Z", "value": 0.86 },
-      { "time": "2025-01-25T12:00:00Z", "value": 0.83 },
-      { "time": "2025-01-26T12:00:00Z", "value": 0.87 },
-      { "time": "2025-01-27T12:00:00Z", "value": 0.81 },
-      { "time": "2025-01-28T12:00:00Z", "value": 0.75 },
-      { "time": "2025-01-29T12:00:00Z", "value": 0.72 },
-      { "time": "2025-01-30T12:00:00Z", "value": 0.78 },
-      { "time": "2025-01-31T12:00:00Z", "value": 0.82 },
-    ],
-    initialValue: 0.7,
-    minValue: 0.5,
-    maxValue: 0.9,
-  },
-  plot2: {
-    label: "Plot 2",
-    color: "#33A1FF",
-    data: [
-      { "time": "2024-12-01", "value": 1500 },
-      { "time": "2024-12-02", "value": 1200 },
-      { "time": "2024-12-03", "value": 1800 },
-      { "time": "2024-12-04", "value": 1700 },
-      { "time": "2024-12-05", "value": 1400 },
-      { "time": "2024-12-06", "value": 1600 },
-      { "time": "2024-12-07", "value": 1550 },
-      { "time": "2024-12-08", "value": 1650 },
-      { "time": "2024-12-09", "value": 2000 },
-      { "time": "2024-12-10", "value": 1750 },
-      { "time": "2024-12-11", "value": 1900 },
-      { "time": "2024-12-12", "value": 1800 },
-      { "time": "2024-12-13", "value": 1850 },
-      { "time": "2024-12-14", "value": 1950 },
-      { "time": "2024-12-15", "value": 2050 },
-      { "time": "2024-12-16", "value": 1900 },
-      { "time": "2024-12-17", "value": 1950 },
-      { "time": "2024-12-18", "value": 2000 },
-      { "time": "2024-12-19", "value": 2100 },
-      { "time": "2024-12-20", "value": 1800 },
-      { "time": "2024-12-21", "value": 1750 },
-      { "time": "2024-12-22", "value": 1600 },
-      { "time": "2024-12-23", "value": 1850 },
-      { "time": "2024-12-24", "value": 1900 },
-      { "time": "2024-12-25", "value": 1950 },
-      { "time": "2024-12-26", "value": 2000 },
-      { "time": "2024-12-27", "value": 1800 },
-      { "time": "2024-12-28", "value": 1650 },
-      { "time": "2024-12-29", "value": 1700 },
-      { "time": "2024-12-30", "value": 1750 },
-      { "time": "2024-12-31", "value": 1900 },
-    ],
-    initialValue: 1500,
-    minValue: 1000,
-    maxValue: 2000,
-  },
-};
+import { useState } from "react";
+import ChartFillter from "./components/ChartFillter";
+import ChartWithOverlay from "./components/ChartWithOverlay";
+import { dataSets } from "./data/dummyData";
 
 export default function App() {
+  const [chartType, setChartType] = useState("overlay"); // Default chart type
+
+  const handleChartTypeChange = (type) => {
+    setChartType(type);
+  };
+
   return (
-    <div className="App">
-      <ChartWithFilter dataSets={dataSets} />
+    <div className="App" style={{ fontFamily: "Arial, sans-serif", padding: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+         
+       marginLeft: "10px",
+          gap: "10px",
+        }}
+      >
+        <button
+          onClick={() => handleChartTypeChange("overlay")}
+          style={{
+            padding: "12px 20px",
+            backgroundColor: chartType === "overlay" ? "#4caf50" : "#f5f5f5",
+            color: chartType === "overlay" ? "#fff" : "#333",
+            border: "2px solid #4caf50",
+            borderRadius: "8px",
+            cursor: "pointer",
+            boxShadow: chartType === "overlay" ? "0px 4px 8px rgba(0, 0, 0, 0.2)" : "none",
+            transition: "all 0.3s ease-in-out",
+          }}
+        >
+          Overlay Chart
+        </button>
+        <button
+          onClick={() => handleChartTypeChange("filter")}
+          style={{
+            padding: "12px 20px",
+            
+            boxSizing: "border-box",
+            fontSize: "16px",
+            fontWeight: "bold",
+            backgroundColor: chartType === "filter" ? "#4caf50" : "#f5f5f5",
+            color: chartType === "filter" ? "#fff" : "#333",
+            border: "2px solid #4caf50",
+            borderRadius: "8px",
+            cursor: "pointer",
+            boxShadow: chartType === "filter" ? "0px 4px 8px rgba(0, 0, 0, 0.2)" : "none",
+            transition: "all 0.3s ease-in-out",
+          }}
+        >
+          Series Compare
+        </button>
+      </div>
+      <div
+        style={{
+          border: "1px solid #ddd",
+          borderRadius: "10px",
+          padding: "10px",
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        {chartType === "overlay" && <ChartWithOverlay dataSets={dataSets} />}
+        {chartType === "filter" && <ChartFillter dataSets={dataSets} />}
+      </div>
     </div>
   );
 }
