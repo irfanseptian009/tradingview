@@ -7,8 +7,8 @@ const ChartWithOverlay = ({
   title = "Chart with Overlay Price Scales",
 }) => {
   const chartRef = useRef(null);
-  const seriesRefs = useRef({}); // To store references to all series
-  const [focusedKey, setFocusedKey] = useState(null); // Key of the focused series
+  const seriesRefs = useRef({}); 
+  const [focusedKey, setFocusedKey] = useState(null); 
 
   useEffect(() => {
     const chart = createChart(chartRef.current, {
@@ -112,7 +112,7 @@ const ChartWithOverlay = ({
 };
 
 ChartWithOverlay.propTypes = {
-  dataSets: PropTypes.object.isRequired, // Object containing datasets for multiple series
+  dataSets: PropTypes.object.isRequired,
   title: PropTypes.string,
 };
 
