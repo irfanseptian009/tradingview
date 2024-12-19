@@ -1,7 +1,7 @@
 export const dataSets = {
   plot1: {
     label: "Plot 1",
-    color: "#FF5733",
+    color: "#E4080A",
     data: [
       { time: "2024-12-01T12:00:00Z", value: 0.55 },
       { time: "2024-12-02T12:00:00Z", value: 0.57 },
@@ -143,7 +143,7 @@ export const dataSets = {
   },
   plot3: {
     label: "Plot 3",
-    color: "#ff3300", 
+    color: "#7DDA58", 
     data: [
       { time: "2024-12-01", value: 1.23 },
       { time: "2024-12-02", value: 1.27 },

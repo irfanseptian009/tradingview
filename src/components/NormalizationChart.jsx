@@ -5,10 +5,10 @@ import { createChart } from "lightweight-charts";
 const NormalizationChart = ({ dataSets }) => {
   const chartRef = useRef(null);
   const seriesRefs = useRef({});
-  const [focusedKey] = useState(null);
+  const [focusedKey, setFocusedKey] = useState(null);
   const [overlayModes, setOverlayModes] = useState({});
 
-  // Set the overlay mode initially 
+  // Set initial overlay modes
   useEffect(() => {
     const initialOverlayModes = {};
     Object.keys(dataSets).forEach((key) => {
@@ -23,45 +23,29 @@ const NormalizationChart = ({ dataSets }) => {
       height: 300,
       timeScale: { timeVisible: true, secondsVisible: true },
       layout: {
-        background: "#121212", 
-        textColor: "#ffff", 
+        background: "#121212",
+        textColor: "#ffff",
         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
         fontSize: 10,
-        attributionLogo: null,
       },
       grid: {
-        vertLines: {
-          color: "#8585e0",
-         
-          
-        },
-        horzLines: {
-          color: "#5d5dd5",
-        },
+        vertLines: { color: "#000066" },
+        horzLines: { color: "#003300" },
       },
-
       crosshair: {
         mode: 1,
-        vertLine: {
-          color: "#4747d1", 
-          width: 1,
-        },
-
+        vertLine: { color: "#4747d1", width: 1 },
         horzLine: {
-          color: "#ffffff", 
-          labelBackgroundColor: "#ffffff", 
-          labelFontColor: "#000000",          
+          color: "#ffffff",
+          labelBackgroundColor: "#ffffff",
+          labelFontColor: "#000000",
           visible: true,
           labelVisible: true,
-
-
         },
-
-      },autoSize: true,
-      
+      },
+      autoSize: true,
     });
 
-    // Add datasets as area series
     Object.keys(dataSets).forEach((key, index) => {
       const isOverlay = overlayModes[key] || false;
       const priceScaleId = isOverlay ? `overlay-${index}` : undefined;
@@ -71,41 +55,24 @@ const NormalizationChart = ({ dataSets }) => {
         bottomColor: "rgba(0, 0, 0, 0.3)",
         lineWidth: 2,
         priceScaleId,
-        
-        crosshairMarkerVisible: true, 
         lineColor: dataSets[key].color || `hsl(${index * 60}, 100%, 50%)`,
-        crosshairMarkerRadius: 1,
-        crosshairMarkerBackgroundColor: dataSets[key].color || `hsl(${index * 60}, 100%, 50%)`,
-        crosshairMarkerBorderColor: dataSets[key].color || `hsl(${index * 60}, 100%, 50%)`,
-       priceLineWidth: 1,
-       baseLineColor: "#ffffff",
-        
       });
 
       series.setData(
         dataSets[key].data.map((item) => ({
-          time: item.time.split("T")[0], 
+          time: item.time.split("T")[0],
           value: item.value,
-
-
         }))
       );
 
-      // Configure price scale for overlay mode
       if (isOverlay) {
         chart.priceScale(priceScaleId).applyOptions({
           position: "right",
-          
           autoScale: true,
-          topColor: dataSets[key].color || `hsl(${index * 60}, 100%, 50%)`,
-          
           borderColor: "#ffffff",
           textColor: "#ffffff",
           alignLabels: true,
           ticksVisible: true,
-          visible: true,
-          minimumWidth: 1000,
-          scaleMargins: { top: 0.40, bottom: 0.40 },
         });
       }
 
@@ -118,34 +85,34 @@ const NormalizationChart = ({ dataSets }) => {
   }, [dataSets, overlayModes]);
 
   useEffect(() => {
-    // Update the focused series when focusedKey changes
-    if (focusedKey) {
-      const series = seriesRefs.current[focusedKey];
+    Object.keys(seriesRefs.current).forEach((key) => {
+      const series = seriesRefs.current[key];
       if (series) {
         series.applyOptions({
-          topColor: dataSets[focusedKey].color || `hsl(${focusedKey * 60}, 100%, 50%)`,
-          bottomColor: "rgba(0, 0, 0, 0.3)",
-          lineWidth: 6,
-          crosshairMarkerVisible: true,
-          
+          topColor:
+            focusedKey === key
+              ? dataSets[key].color || "rgba(255,255,255,0.9)"
+              : "rgba(255,255,255,0.2)",
+        
+          lineWidth: focusedKey === key ? 4 : 1,
         });
       }
-    }
-  }, [dataSets, focusedKey]);
+    });
+  }, [focusedKey, dataSets]);
 
   const toggleOverlayMode = (key) => {
-    setOverlayModes((prev) => {
-      const newOverlayModes = { ...prev };
-
-      // If the dataset is in overlay mode
-      if (newOverlayModes[key]) {
-        delete newOverlayModes[key];
-      } else {
-        newOverlayModes[key] = true;
-      }
-
-      return newOverlayModes;
+    setOverlayModes((prevModes) => {
+      const newModes = Object.keys(prevModes).reduce((acc, currentKey) => {
+        acc[currentKey] = true;
+        return acc;
+      }, {});
+      newModes[key] = prevModes[key] === false; 
+      return newModes;
     });
+  };
+
+  const handleFocus = (key) => {
+    setFocusedKey((prevKey) => (prevKey === key ? null : key));
   };
 
   return (
@@ -157,7 +124,9 @@ const NormalizationChart = ({ dataSets }) => {
         borderRadius: "8px",
       }}
     >
-      <h3 style={{ marginBottom: "10px", color: "#E0E0E0" }}>Normalization Chart</h3> 
+      <h3 style={{ marginBottom: "10px", color: "#E0E0E0" }}>
+        Normalization Chart
+      </h3>
       <div
         ref={chartRef}
         style={{
@@ -174,21 +143,32 @@ const NormalizationChart = ({ dataSets }) => {
           flexWrap: "wrap",
         }}
       >
-        {Object.keys(dataSets).map((key) => (
-          <button
-            key={key}
-            onClick={() => toggleOverlayMode(key)}
-            style={{
-              padding: "10px 20px",
-              backgroundColor: overlayModes[key] ? "#7171da" : " #3333ff",
-              color: overlayModes[key] ? "#000" : "#fff",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
-          >
-            {overlayModes[key] ? `${key}` : `${key}`}
-          </button>
+        {Object.keys(dataSets).map((key, index) => (
+         <button
+         key={key}
+         onClick={() => {
+           toggleOverlayMode(key);
+           handleFocus(key);
+         }}
+         style={{
+           padding: "6px 16px",
+
+           backgroundColor: overlayModes[key]
+             ? dataSets[key].color || `hsl(${index * 60}, 100%, 50%)`
+             : "#333",
+           color: "#fff",
+           border: "none",
+           borderRadius: "4px",
+           marginTop: "10px",
+           cursor: "pointer",
+           boxShadow: overlayModes[key]
+             ?  "none"
+             : `0 0 18px 5px ${dataSets[key].color || `hsl(${index * 60}, 100%, 50%)`}`, 
+           transition: "all 0.5s ease", 
+         }}
+       >
+         {key}
+       </button>
         ))}
       </div>
     </div>
